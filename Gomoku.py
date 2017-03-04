@@ -19,8 +19,6 @@ class Gomoku():
 			if e.type == pygame.QUIT:
 				self.going = False
 
-	def draw
-
 if __name__ == '__main__':
 	game = Gomoku()
 	game.loop()
