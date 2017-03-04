@@ -12,12 +12,18 @@ class Gomoku():
 	def loop(self):
 		while self.going:
 			self.update()
+			self.draw()
 		pygame.quit()
 
 	def update(self):
 		for e in pygame.event.get():
 			if e.type == pygame.QUIT:
 				self.going = False
+
+	def draw(self):
+		self.screen.fill((255, 255, 255))  # fill all screen as white
+		pygame.display.update()
+
 
 if __name__ == '__main__':
 	game = Gomoku()
