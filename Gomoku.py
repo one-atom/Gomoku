@@ -15,8 +15,8 @@ class Gomoku():
 		self.going = True # this is a signal of 
 		self.with_AI = False
 		self.AI_first = True
-		self.AI = AI()
-		
+
+
 		#self.parameters = {'window':self.window, 
 		#				   'with_AI':self.with_AI, 
 		#				   'AI_first':self.AI_first}
@@ -32,11 +32,6 @@ class Gomoku():
         
 		self.welcome = Welcome(self)
 
-		self.current_color = 1
-		self.current_game = np.zeros((19,19), dtype = int)
-		self.win = 0
-		self.game_over = False
-
 	def loop(self):
 		while self.going:
 			self.update()
@@ -44,6 +39,10 @@ class Gomoku():
 		pygame.quit()
 
 	def update(self):
+
+		if self.with_AI and self.current_color == (not self.AI_first) + 1:
+			self.AI.choose_according_to_position_evaluation()
+
 
 		for e in pygame.event.get():
 
@@ -63,7 +62,15 @@ class Gomoku():
 				# if on checkboard screen
 				elif(self.window == 1):
 					if not self.game_over:
-						self.chessboard.handle_key_event(e)
+						if not self.with_AI:
+							posi = True
+						else:
+							if self.current_color == self.AI_first + 1:
+								posi = True
+							else:
+								posi = False
+						
+						self.chessboard.handle_key_event(e, posi)
 					else:
 						self.init_game()
 
@@ -94,13 +101,13 @@ class Gomoku():
 			if self.game_over:
 				if self.win == 1:
 					to_show = "Black"
-				else:
+				elif self.win == 2:
 					to_show = "White"
+				elif self.win == 3:
+					to_show = "No One"
 
 				self.screen.blit(self.font.render("{} Win!".format(to_show), True, (0,0,0)), (350, 10))
 		
-
-
 		pygame.display.update()
 
 
@@ -111,9 +118,16 @@ class Gomoku():
 		except:
 			self.chessboard = Chessboard(self)		
 		self.current_color = 1
-		self.current_game = np.zeros((19,19), dtype = int)
+		self.current_game = np.zeros((self.chessboard.grid_count,self.chessboard.grid_count), dtype = int)
 		self.win = 0
 		self.game_over = False
+		self.chess_count = 0
+		if (self.with_AI):
+			try:
+				del self.AI
+				self.AI = AI(self)
+			except:
+				self.AI = AI(self)
 
 	def AI_select(self):
 		pass
