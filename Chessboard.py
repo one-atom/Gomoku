@@ -4,17 +4,22 @@ import pygame
 from Button import Button
 
 class Chessboard:
-	def __init__(self, font):
+	def __init__(self, game):
+
+		self.font = game.font
+		self.game = game
 		self.grid_size = 26  # the width of grid
 		self.start_x, self.start_y = 30, 50 # the coordinate of the left-up-most check grid 
 		self.edge_size = self.grid_size / 2 # the width of blank around the checkboard
 		self.grid_count = 19  # the number of grid each column or row
-		self.font = font
 		# init a return button
 		self.return_to_welcome = Button([600, 500], [150, 30], "Return", self.font)
 
-	def draw(self, game):
 
+
+	def draw(self):
+
+		game = self.game
 		screen = game.screen
 
 		# draw retrun button
@@ -60,7 +65,9 @@ class Chessboard:
 					y = self.start_y + c * self.grid_size
 					pygame.draw.circle(screen, color, [x, y], self.grid_size // 2)
 
-	def handle_key_event(self, e, game):
+
+	def handle_key_event(self, e):
+		game = self.game
 		pos = e.pos
 		if (self.return_to_welcome.check(pos)):
 			game.window = 0
@@ -87,6 +94,28 @@ class Chessboard:
 				game.current_game[absolute_r, absolute_c] = game.current_color
 				game.current_color %= 2
 				game.current_color += 1
+
+	def get_continuous_count(self, r, c, dr, dc):
+		game = self.game
+		piece = game.current_game[r, c]
+		if piece == 0:
+			return 0
+
+		result = 0
+		i = 1
+		while True:
+			new_r = r + dr * i
+			new_c = c + dc * i
+			if 0 <= new_r < self.grid_count and 0 <= new_c < self.grid_count:
+				if game.current_game[new_r, new_c] == piece:
+					result += 1
+				else:
+					break
+			else:
+				break
+			i += 1
+		return result
+
 
 
 

@@ -5,19 +5,23 @@ from Button import Button
 import pdb
 
 class Welcome():
-	def __init__(self, font):
-		self.font = font
+	def __init__(self, game):
+
+		self.game = game
+		self.font = game.font
 		self.one_player_button = Button([300, 350], [200, 30], "1P VS AI", self.font)
 		self.one_player_button2 = Button([300, 400], [200, 30], "AI VS 1P", self.font)
 		self.two_player_button = Button([300, 450], [200, 30], "1P VS 2P", self.font)
 
-	def draw(self, screen):
+	def draw(self):
+		game = self.game
+		screen = game.screen
 		self.one_player_button.draw(screen)
 		self.one_player_button2.draw(screen)
 		self.two_player_button.draw(screen)
 
-	def handle_key_event(self, e, game):
-		
+	def handle_key_event(self, e):
+		game = self.game
 		pos = e.pos
 		
 		if self.one_player_button.check(pos):

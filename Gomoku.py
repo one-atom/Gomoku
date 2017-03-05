@@ -31,7 +31,7 @@ class Gomoku():
 		else:
 			self.font = pygame.font.Font(r"/Library/Fonts/Courier New.ttf", 24)
         
-		self.welcome = Welcome(self.font)
+		self.welcome = Welcome(self)
 
 		self.current_color = 1
 		self.current_game = np.zeros((19,19), dtype = int)
@@ -55,19 +55,19 @@ class Gomoku():
 				
 				# if on welcome screen
 				if(self.window == 0):
-					self.welcome.handle_key_event(e, self)
+					self.welcome.handle_key_event(e)
 					if (self.window == 1):
 						try:
 							del self.chessboard
-							self.chessboard = Chessboard(self.font)
+							self.chessboard = Chessboard(self)
 						except:
-							self.chessboard = Chessboard(self.font)
+							self.chessboard = Chessboard(self)
 						self.current_color = 1
 						self.current_game = np.zeros((19,19), dtype = int)
 
 				# if on checkboard screen
 				elif(self.window == 1):
-					self.chessboard.handle_key_event(e, self)
+					self.chessboard.handle_key_event(e)
 
 
 	def draw(self):
@@ -75,10 +75,10 @@ class Gomoku():
 		self.screen.fill((255, 255, 255))  # fill all screen as white
 		
 		if self.window == 0:
-			self.welcome.draw(self.screen)
+			self.welcome.draw()
 		
 		if self.window == 1:
-			self.chessboard.draw(self)  # call draw function with parameter self.screen in class chessborad
+			self.chessboard.draw()  # call draw function with parameter self.screen in class chessborad
 			if self.with_AI:
 				if self.AI_first:
 					to_show = 'Black'
@@ -96,7 +96,10 @@ class Gomoku():
 
 		pygame.display.update()
 
-	def auto_select(self):
+
+
+
+	def AI_select(self):
 		pass
 
 
