@@ -46,10 +46,49 @@ class Chessboard:
 							 [x, self.start_y + self.grid_size * (self.grid_count - 1)],
 							 2)  
 
-	def handle_return_event(self, e, game):
+		# draw pieces
+		for r in range(self.grid_count):
+			for c in range(self.grid_count):
+				piece = game.current_game[r,c]
+				if piece != 0:
+					if piece == 1:
+						color = (0, 0, 0)
+					else:
+						color = (255, 255, 255)
+
+					x = self.start_x + r * self.grid_size
+					y = self.start_y + c * self.grid_size
+					pygame.draw.circle(screen, color, [x, y], self.grid_size // 2)
+
+	def handle_key_event(self, e, game):
 		pos = e.pos
 		if (self.return_to_welcome.check(pos)):
 			game.window = 0
 		else:
 			game.window = 1
+		absolute_r = pos[0] - (self.start_x - self.grid_size / 2)
+		absolute_c = pos[1] - (self.start_y - self.grid_size / 2)
+		absolute_r = absolute_r / self.grid_size
+		absolute_c = absolute_c / self.grid_size
+		#relative_x, relative_y = absolute_to_relative(absolute_nx, absolute_ny)
+		if (absolute_r < 0 or absolute_r > 18 or absolute_c < 0 or absolute_c > 18):
+			return
+		
+		# check if this position have been positioned a piece
+
+		check = game.current_game[absolute_r, absolute_c]
+		if(check == 0):
+			if game.with_AI:
+				if game.AI_first != game.current_color - 1:
+					game.current_game[absolute_r, absolute_c] = game.current_color
+					game.current_color %= 2
+					game.current_color += 1
+			else:
+				game.current_game[absolute_r, absolute_c] = game.current_color
+				game.current_color %= 2
+				game.current_color += 1
+
+
+
+
 
