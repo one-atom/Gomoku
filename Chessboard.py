@@ -14,7 +14,7 @@ class Chessboard:
 		self.grid_count = 19  # the number of grid each column or row
 		# init a return button
 		self.return_to_welcome = Button([600, 500], [150, 30], "Return", self.font)
-
+		self.win_num = 5
 
 
 	def draw(self):
@@ -88,10 +88,12 @@ class Chessboard:
 			if game.with_AI:
 				if game.AI_first != game.current_color - 1:
 					game.current_game[absolute_r, absolute_c] = game.current_color
+					self.check_win(absolute_r, absolute_c)
 					game.current_color %= 2
 					game.current_color += 1
 			else:
 				game.current_game[absolute_r, absolute_c] = game.current_color
+				self.check_win(absolute_r, absolute_c)
 				game.current_color %= 2
 				game.current_color += 1
 
@@ -116,6 +118,25 @@ class Chessboard:
 			i += 1
 		return result
 
+	def check_win(self, r, c):
+		game = self.game
+		n_count = self.get_continuous_count(r, c, -1, 0)
+		s_count = self.get_continuous_count(r, c, 1, 0)
+
+		e_count = self.get_continuous_count(r, c, 0, 1)
+		w_count = self.get_continuous_count(r, c, 0, -1)
+
+		se_count = self.get_continuous_count(r, c, 1, 1)
+		nw_count = self.get_continuous_count(r, c, -1, -1)
+
+		ne_count = self.get_continuous_count(r, c, -1, 1)
+		sw_count = self.get_continuous_count(r, c, 1, -1)
+
+
+		if (n_count + s_count + 1 >= self.win_num ) or (e_count + w_count + 1 >= self.win_num ) or \
+			(se_count + nw_count + 1 >= self.win_num ) or (ne_count + sw_count + 1 >= self.win_num ):
+			game.win = game.current_game[r, c]
+			game.game_over = True
 
 
 
